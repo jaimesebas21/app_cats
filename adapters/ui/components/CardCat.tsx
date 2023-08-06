@@ -1,18 +1,37 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { ICat } from '../../../domain/ICat'
+const uri= 'https://api.thecatapi.com/v1/breeds'
+
 interface Props{
   cat:ICat
 }
 const cardCat = ({cat}:Props) => {
+  const [url, setUrl] = useState('')
+  const getImage = async () => {
+    try {
+      if (!cat.imageUrl) return
+      const response = await fetch('https://api.thecatapi.com/v1/images/'+ cat.imageUrl)
+      const jsonData = await response.json();
+      setUrl(jsonData.url)
+    } catch (error) {
+      console.error('Error fetching image:', error, cat);
+    }
+  };
+
+  useLayoutEffect(() => {
+    getImage()
+  }, [])
+  
+
   return (
     <View style={styles.cardContainer}>
       <Text style={styles.text}>{cat.breedName}</Text>
-      <Image 
+      {url != ''&& <Image 
         style = {styles.imageContainer}
         source={{
-          uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKwBwlRQfkM-299NotdC0uYBX04O4LkvFrgXv5QXUIJg&s'
-        }}/>
+          uri: url
+        }}/>}
         <View style={{flexDirection:'row', justifyContent:'space-between', width:'100%', paddingHorizontal:20 }}>
         <Text style={styles.text}>{cat.origin}</Text>
         <Text style={styles.text}>{cat.inteligence}</Text>
