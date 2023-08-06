@@ -43,6 +43,7 @@ const cardCat = ({cat}:Props) => {
 const styles = StyleSheet.create({
     cardContainer:{
       marginTop:30,
+      marginHorizontal:20,
       height:400,
       borderColor:'black',
       borderWidth:1,
